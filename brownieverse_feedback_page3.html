@@ -147,6 +147,43 @@
       <p style="font-size:18px;">We truly appreciate your feedback. Every bite matters! 🍫</p>
     </div>
   </div>
+  <script>
+  const form = document.getElementById("feedback-form");
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = {};
+
+    formData.forEach((value, key) => {
+      if (data[key]) {
+        if (Array.isArray(data[key])) {
+          data[key].push(value);
+        } else {
+          data[key] = [data[key], value];
+        }
+      } else {
+        data[key] = value;
+      }
+    });
+
+    const res = await fetch("https://kryo.app.n8n.cloud/webhook/feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      form.style.display = "none";
+      document.getElementById("thank-you").style.display = "block";
+    } else {
+      alert("Something went wrong!");
+    }
+  });
+</script>
+
 
   
 </body>
